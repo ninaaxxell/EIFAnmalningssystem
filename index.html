@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src = "js/scripts.js"></script>
+  <title>EIF Fotboll – Medlemmar och aktiviteter</title>
+
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="#">
+        <img src="images/EIF_logo_png-scaled.png" alt="EIF Fotboll logotyp">
+        <span>EIF Fotboll</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Huvudmeny">
+        <a href="#aktiviteter" class="active">Aktiviteter</a>
+        <a href="#mina-anmalningar">Mina anmälningar</a>
+        <a href="#admin" id="admin-link" hidden>Administration</a>
+      </nav>
+
+      <label class="role-switch">
+        Visa som
+        <select id="role-select">
+          <option value="medlem">Medlem</option>
+          <option value="admin">Administratör</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <h1>Aktiviteter</h1>
+    <p>Här kommer aktivitetslistan.</p>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <address>
+        <strong>Ekenäs Idrottsförening rf</strong><br>
+        EIF Fotboll<br>
+        Ladugårdsgatan 14<br>
+        10600 Ekenäs
+      </address>
+      <p class="footer-slogan">EIF - Laget före jaget!</p>
+      <p class="footer-copy">&copy; 2026 Ekenäs Idrottsförening rf. Prototyp, inte för skarp användning.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Visar admin-länken bara när rollen "Administratör" är vald
+    const roleSelect = document.getElementById("role-select");
+    const adminLink = document.getElementById("admin-link");
+
+    roleSelect.addEventListener("change", () => {
+      adminLink.hidden = roleSelect.value !== "admin";
+    });
+
+    // Markerar vald menyflik
+    document.querySelectorAll(".main-nav a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelectorAll(".main-nav a").forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
