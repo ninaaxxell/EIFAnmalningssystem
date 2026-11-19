@@ -4,69 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/style.css">
-  <script defer src = "js/scripts.js"></script>
+  <script defer src="js/header.js"></script>
+  <script defer src="js/footer.js"></script>
+  <script defer src="js/scripts.js"></script>
   <title>EIF Fotboll – Medlemmar och aktiviteter</title>
-
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="logo" href="#">
-        <img src="images/EIF_logo_png-scaled.png" alt="EIF Fotboll logotyp">
-        <span>EIF Fotboll</span>
-      </a>
-
-      <nav class="main-nav" aria-label="Huvudmeny">
-        <a href="#aktiviteter" class="active">Aktiviteter</a>
-        <a href="#mina-anmalningar">Mina anmälningar</a>
-        <a href="#admin" id="admin-link" hidden>Administration</a>
-      </nav>
-
-      <label class="role-switch">
-        Visa som
-        <select id="role-select">
-          <option value="medlem">Medlem</option>
-          <option value="admin">Administratör</option>
-        </select>
-      </label>
-    </div>
-  </header>
+  <header class="site-header" id="site-header"></header>
 
   <main>
-    <h1>Aktiviteter</h1>
-    <p>Här kommer aktivitetslistan.</p>
+
+    <!-- Inloggning: visas tills man har loggat in -->
+    <section id="login-view" class="login-card" aria-labelledby="login-title">
+      <h1 id="login-title">Logga in</h1>
+      <p class="muted">Logga in för att se aktiviteter och anmäla dig.</p>
+
+      <form id="login-form" novalidate>
+        <label class="field">
+          Användarnamn
+          <input type="text" id="username" name="username" autocomplete="username" required>
+        </label>
+        <label class="field">
+          Lösenord
+          <input type="password" id="password" name="password" autocomplete="current-password" required>
+        </label>
+
+        <p id="login-error" class="error" role="alert" hidden>
+          Fel användarnamn eller lösenord. Försök igen.
+        </p>
+
+        <button type="submit" class="btn-primary">Logga in</button>
+      </form>
+
+      <div class="demo-hint">
+        <strong>Testkonton för prototypen</strong>
+        <ul>
+          <li>Medlem: <code>medlem</code> / <code>medlem123</code></li>
+          <li>Tränare: <code>tranare</code> / <code>tranare123</code></li>
+          <li>Administratör: <code>admin</code> / <code>admin123</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Vyer efter inloggning. data-roles anger vilka roller som får se vyn. -->
+    <section id="aktiviteter" class="view" data-roles="medlem tranare admin" hidden>
+      <h1>Aktiviteter</h1>
+      <p data-roles="tranare" hidden>Du ser bara dina egna evenemang.</p>
+      <p>Här kommer aktivitetslistan.</p>
+    </section>
+
+    <section id="mina-anmalningar" class="view" data-roles="medlem" hidden>
+      <h1>Mina anmälningar</h1>
+      <p>Här kommer dina anmälningar och betalstatus.</p>
+    </section>
+
+    <section id="mina-evenemang" class="view" data-roles="tranare" hidden>
+      <h1>Mina evenemang</h1>
+      <p>Här kommer anmälda och betalstatus för dina evenemang.</p>
+    </section>
+
+    <section id="admin" class="view" data-roles="admin" hidden>
+      <h1>Administration</h1>
+      <p>Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
+    </section>
+
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <address>
-        <strong>Ekenäs Idrottsförening rf</strong><br>
-        EIF Fotboll<br>
-        Ladugårdsgatan 14<br>
-        10600 Ekenäs
-      </address>
-      <p class="footer-slogan">EIF - Laget före jaget!</p>
-      <p class="footer-copy">&copy; 2026 Ekenäs Idrottsförening rf. Prototyp, inte för skarp användning.</p>
-    </div>
-  </footer>
+  <footer class="site-footer" id="site-footer"></footer>
 
-  <script>
-    // Visar admin-länken bara när rollen "Administratör" är vald
-    const roleSelect = document.getElementById("role-select");
-    const adminLink = document.getElementById("admin-link");
-
-    roleSelect.addEventListener("change", () => {
-      adminLink.hidden = roleSelect.value !== "admin";
-    });
-
-    // Markerar vald menyflik
-    document.querySelectorAll(".main-nav a").forEach(link => {
-      link.addEventListener("click", () => {
-        document.querySelectorAll(".main-nav a").forEach(l => l.classList.remove("active"));
-        link.classList.add("active");
-      });
-    });
-  </script>
 </body>
 </html>
