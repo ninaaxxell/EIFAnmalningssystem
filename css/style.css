@@ -8,6 +8,8 @@
   --border: #dde3ea;
   --error: #b42318;
   --error-bg: #fdecea;
+  --paid: #1a7f37;
+  --paid-bg: #e3f5e8;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -15,11 +17,13 @@
     --surface: #1b232c;
     --text: #e8edf2;
     --muted: #9aa8b6;
-    --brand: #007b39;
+    --brand: #3dba6f;
     --brand-text: #0b1118;
     --border: #2b3640;
     --error: #ffb4ab;
     --error-bg: #3a1f1c;
+    --paid: #7ee2a0;
+    --paid-bg: #17301f;
   }
 }
 
@@ -205,6 +209,43 @@ main {
   border-radius: 4px;
   background: var(--bg);
 }
+
+/* ---------- MEDLEMSVY ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.card {
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.card h2 { margin: 0 0 0.75rem; font-size: 1.1rem; }
+.card-wide { margin-bottom: 1rem; }
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+  margin: 0;
+}
+.details dt { color: var(--muted); }
+.details dd { margin: 0; }
+
+.badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.badge-paid { background: var(--paid-bg); color: var(--paid); }
+.badge-unpaid { background: var(--error-bg); color: var(--error); }
 
 /* ---------- KONTAKTSIDA ---------- */
 .contact-card {
