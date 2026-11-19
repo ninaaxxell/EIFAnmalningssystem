@@ -19,8 +19,8 @@
 
       <!-- Menyn visas först efter inloggning. data-roles styr vem som ser vilken länk. -->
       <nav class="main-nav" aria-label="Huvudmeny" data-roles="medlem tranare admin" hidden>
-        <a href="index.html#aktiviteter" data-roles="medlem tranare admin">Aktiviteter</a>
-        <a href="index.html#mina-anmalningar" data-roles="medlem">Mina anmälningar</a>
+        <a href="index.html#min-sida" data-roles="medlem">Min sida</a>
+        <a href="index.html#aktiviteter" data-roles="tranare admin">Aktiviteter</a>
         <a href="index.html#mina-evenemang" data-roles="tranare">Mina evenemang</a>
         <a href="index.html#admin" data-roles="admin">Administration</a>
       </nav>

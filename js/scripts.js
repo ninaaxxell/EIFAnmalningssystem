@@ -6,45 +6,17 @@
    I en riktig version ska inloggningen kontrolleras på en server.
 ------------------------------------------------------------------- */
 const USERS = {
-  medlem:  { password: "medlem123",  name: "Medlem",  role: "medlem" },
+  // memberId kopplar medlemmen till medlemsregistret (medlemsnummer)
+  medlem:  { password: "medlem123",  name: "Medlem",  role: "medlem", memberId: "EIF-1001" },
   tranare: { password: "tranare123", name: "Tränare", role: "tranare" },
   admin:   { password: "admin123",   name: "Admin",   role: "admin" }
 };
 
-const ROLE_LABELS = {
-  medlem: "Medlem",
-  tranare: "Tränare",
-  admin: "Administratör"
-};
-
-const SESSION_KEY = "eifInloggad";
-
-/* ---------- Inloggad användare (sparas tills fliken stängs) ---------- */
-function getUser() {
-  try {
-    return JSON.parse(sessionStorage.getItem(SESSION_KEY));
-  } catch (e) {
-    return null;
-  }
-}
-
-function setUser(user) {
-  try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
-  } catch (e) {
-    /* Om lagring inte fungerar måste man logga in igen vid omladdning */
-  }
-}
-
-function clearUser() {
-  try {
-    sessionStorage.removeItem(SESSION_KEY);
-  } catch (e) { /* ignoreras */ }
-}
+/* Rollerna, den inloggade användaren och behörighetskontroller finns i roles.js */
 
 /* ---------- Visa och dölj delar av sidan beroende på roll ---------- */
 function applyAuthState() {
-  const user = getUser();
+  const user = getCurrentUser();
 
   // Allt med data-roles visas bara om den inloggades roll finns i listan
   document.querySelectorAll("[data-roles]").forEach(el => {
@@ -58,13 +30,13 @@ function applyAuthState() {
 
   if (user) {
     document.getElementById("user-name").textContent = user.name;
-    document.getElementById("user-role").textContent = ROLE_LABELS[user.role];
+    document.getElementById("user-role").textContent = getRoleLabel(user.role);
   }
 }
 
 /* ---------- Visa rätt vy (aktiviteter, admin osv.) ---------- */
 function showView() {
-  const user = getUser();
+  const user = getCurrentUser();
   const views = document.querySelectorAll(".view");
   if (!user || views.length === 0) return;
 
@@ -107,12 +79,19 @@ if (loginForm) {
     }
 
     errorBox.hidden = true;
-    setUser({ username: username, name: account.name, role: account.role });
+    setCurrentUser({
+      username: username,
+      name: account.name,
+      role: account.role,
+      memberId: account.memberId || null
+    });
     loginForm.reset();
 
-    location.hash = "#aktiviteter";
+    // Börja på den första vyn som rollen får se
+    history.replaceState(null, "", location.pathname);
     applyAuthState();
     showView();
+    renderMemberViewIfAvailable();
   });
 }
 
@@ -121,7 +100,7 @@ const logoutBtn = document.getElementById("logout-btn");
 
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-    clearUser();
+    clearCurrentUser();
 
     // På andra sidor än startsidan går man tillbaka till inloggningen
     if (!document.getElementById("login-view")) {
@@ -138,6 +117,12 @@ if (logoutBtn) {
 }
 
 /* ---------- Start ---------- */
+// Fyller medlemsvyn om member-view.js finns på sidan
+function renderMemberViewIfAvailable() {
+  if (typeof renderMemberView === "function") renderMemberView();
+}
+
 window.addEventListener("hashchange", showView);
 applyAuthState();
 showView();
+renderMemberViewIfAvailable();
