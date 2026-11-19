@@ -1,0 +1,260 @@
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --text: #1d2733;
+  --muted: #5b6b7b;
+  --brand: #1f6feb;
+  --brand-text: #ffffff;
+  --border: #dde3ea;
+  --error: #b42318;
+  --error-bg: #fdecea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12171d;
+    --surface: #1b232c;
+    --text: #e8edf2;
+    --muted: #9aa8b6;
+    --brand: #4c8dff;
+    --brand-text: #0b1118;
+    --border: #2b3640;
+    --error: #ffb4ab;
+    --error-bg: #3a1f1c;
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* Se till att hidden-attributet alltid vinner över andra display-regler */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ---------- HEADER ---------- */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  margin-right: auto;
+}
+.logo img { height: 48px; width: auto; display: block; }
+
+.main-nav { display: flex; gap: 0.25rem; }
+.main-nav a {
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.main-nav a:hover { background: var(--bg); }
+.main-nav a.active {
+  background: var(--brand);
+  color: var(--brand-text);
+}
+
+/* Inloggad användare */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.role-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.btn-ghost {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-ghost:hover { background: var(--bg); }
+
+/* Kontaktknapp uppe i högra hörnet */
+.btn-contact {
+  padding: 0.5rem 1.1rem;
+  border: 1.5px solid var(--brand);
+  border-radius: 6px;
+  color: var(--brand);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn-contact:hover,
+.btn-contact[aria-current="page"] {
+  background: var(--brand);
+  color: var(--brand-text);
+}
+
+/* ---------- MAIN ---------- */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+.muted { color: var(--muted); }
+
+/* ---------- INLOGGNING ---------- */
+.login-card {
+  max-width: 400px;
+  margin: 1.5rem auto;
+  padding: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.login-card h1 { margin-top: 0; }
+
+.field {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.field input {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+.btn-primary {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: var(--brand);
+  color: var(--brand-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary:hover { filter: brightness(1.08); }
+
+.error {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  background: var(--error-bg);
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+.demo-hint {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.demo-hint ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+.demo-hint code {
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  background: var(--bg);
+}
+
+/* ---------- KONTAKTSIDA ---------- */
+.contact-card {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+/* ---------- FOOTER ---------- */
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer-inner address { font-style: normal; line-height: 1.5; }
+.footer-inner strong { color: var(--text); }
+.footer-slogan {
+  align-self: center;
+  font-weight: 600;
+  color: var(--text);
+}
+.footer-copy {
+  width: 100%;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+  font-size: 0.8rem;
+}
+
+/* ---------- SMÅ SKÄRMAR ---------- */
+@media (max-width: 760px) {
+  .header-inner { gap: 0.75rem; }
+  .main-nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+  }
+  .user-info { order: 2; }
+}
