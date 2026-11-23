@@ -299,3 +299,22 @@ main {
   }
   .user-info { order: 2; }
 }
+
+/* ---------- ADMIN: aktiviteter och betalningar ---------- */
+
+.field select {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+#admin-activities h3 { margin: 1rem 0 0.25rem; }
+#admin-activities tr.paid td   { background: var(--paid-bg);  color: var(--paid); }
+#admin-activities tr.unpaid td { background: var(--error-bg); color: var(--error); }
+#admin-activities .btn-ghost { margin-left: 0.75rem; }
