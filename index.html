@@ -11,6 +11,7 @@
   <script defer src="js/roles.js"></script>
   <script defer src="js/member-view.js"></script>
   <script defer src="js/coach-view.js"></script>
+  <script defer src="js/admin.js"></script>
   <script defer src="js/scripts.js"></script>
   <title>EIF Fotboll – Medlemmar och aktiviteter</title>
 </head>
@@ -105,7 +106,11 @@
 
     <section id="admin" class="view" data-roles="admin" hidden>
       <h1>Administration</h1>
-      <p>Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
+      <article class="card card-wide">
+        <h2>Medlemmar och årsavgift</h2>
+        <div id="admin-members"></div>
+      </article>
+      <p class="muted">Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
     </section>
 
   </main>
