@@ -1,0 +1,109 @@
+┌──────────────────────────────────────────────────────────────┐
+│  🏅 SPORTKLUBBEN                         Inloggad: Medlem     │
+├───────────────┬──────────────────────────────────────────────┤
+│               │                                              │
+│  📋 MENY      │  Välkommen till Sportklubben!                │
+│               │                                              │
+│  🏠 Startsida │  ┌──────────────┐  ┌──────────────┐           │
+│               │  │ Aktiviteter  │  │ Mina         │           │
+│  ⚽ Aktiviteter│  │      8       │  │ anmälningar  │           │
+│               │  │              │  │      3       │           │
+│  👤 Medlemmar │  └──────────────┘  └──────────────┘           │
+│               │                                              │
+│  ⚙ Admin      │  Kommande aktiviteter                        │
+│               │                                              │
+│               │  ⚽ Fotbollsträning                           │
+│               │  🏐 Volleyboll                                │
+│               │  🏃 Löpträning                                │
+│               │                                              │
+└───────────────┴──────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│  ⚽ TILLGÄNGLIGA AKTIVITETER                                  │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ⚽ Fotbollsträning                                           │
+│  Datum: 20.11.2026                                            │
+│  Plats: Idrottshallen                                         │
+│  Lediga platser: 8                                            │
+│                                                              │
+│  [ AVANMÄL MIG ]                                              │
+│                                                              │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  🏐 Volleyboll                                                │
+│  Datum: 22.11.2026                                            │
+│  Plats: Sporthallen                                           │
+│  Lediga platser: 12                                           │
+│                                                              │
+│  [ ANMÄL MIG ]                                                │
+│                                                              │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  🏃 Löpträning                                                │
+│  Datum: 25.11.2026                                            │
+│  Plats: Centralparken                                         │
+│  Lediga platser: 5                                            │
+│                                                              │
+│  [ ANMÄL MIG ]                                                │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│  ⚙ ADMINISTRATION                                            │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Välj aktivitet: [ Fotbollsträning       ▼ ]                 │
+│                                                              │
+│  Deltagare: 3                                                │
+│                                                              │
+│  ┌──────────────────┬──────────────┬──────────────────────┐  │
+│  │ Medlem           │ Anmälan      │ Betalning            │  │
+│  ├──────────────────┼──────────────┼──────────────────────┤  │
+│  │ Anna Andersson   │ ✓ Anmäld     │ 🟢 Betald            │  │
+│  │ Erik Eriksson    │ ✓ Anmäld     │ 🔴 Obetald           │  │
+│  │ Lisa Larsson     │ ✓ Anmäld     │ 🟢 Betald            │  │
+│  └──────────────────┴──────────────┴──────────────────────┘  │
+│                                                              │
+│  Klicka på betalningsstatus för att ändra den.               │
+│                                                              │
+│  🟢 = Betald                                                  │
+│  🔴 = Obetald                                                 │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│  👤 MEDLEMSHANTERING                                         │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Medlem             Årsavgift                                 │
+│  ─────────────────────────────────────                        │
+│  Anna Andersson     🟢 Betald                                 │
+│  Erik Eriksson      🔴 Obetald                                │
+│  Lisa Larsson       🟢 Betald                                 │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+             SPORTKLUBBENS SYSTEM
+                      │
+          ┌───────────┴───────────┐
+          │                       │
+       MEDLEM                 ADMINISTRATÖR
+          │                       │
+          ▼                       ▼
+    Se aktiviteter          Hantera medlemmar
+          │                       │
+          ▼                       ▼
+    Anmäla sig               Hantera aktiviteter
+          │                       │
+          ▼                       ▼
+    Avregistrera             Se deltagarlistor
+          │                       │
+          │                       ▼
+          │                 Hantera betalningar
+          │                       │
+          └───────────┬───────────┘
+                      │
+                      ▼
+                 JSON-FIL
+           (Medlemmar + aktiviteter)
