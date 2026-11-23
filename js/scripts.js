@@ -122,13 +122,20 @@ function showView() {
   }
 }
 
-// Ritar upp medlemssidan och tränarsidan (om filerna finns på sidan)
+// Ritar upp sidorna för medlem, tränare och admin (om filerna finns på sidan).
+// Varje funktion gör bara något om rätt roll är inloggad.
 function renderMemberViewIfAvailable() {
   if (typeof renderMemberView === "function") {
-    renderMemberView();
+    renderMemberView();       // member-view.js: uppgifter och årsavgift
+  }
+  if (typeof renderMemberActivities === "function") {
+    renderMemberActivities(); // activities.js: medlemmens aktiviteter
   }
   if (typeof renderCoachView === "function") {
-    renderCoachView();
+    renderCoachView();        // coach-view.js: tränarens evenemang
+  }
+  if (typeof renderAdminView === "function") {
+    renderAdminView();        // admin.js: medlemslista med årsavgift
   }
 }
 
