@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="sv">
+	<head>
+		<title>EkenäsIF</title>
+		<meta charset ="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="style.css">
+		<script defer src="registrations.js"></script>
+	</head>
+
+<p>Vinter/Vår 2027</p>
+    </header>
+<body style="background-color: Gray;">
+    <main>
+
+        <section class="registration-section">
+
+            <h2>Anmälan till aktivitet</h2>
+
+            <label for="activitySelect">
+                Välj aktivitet:
+            </label>
+
+            <select id="activitySelect">
+                <option value="">Välj aktivitet</option>
+            </select>
+
+            <label for="memberNumber">
+                Medlemsnummer:
+            </label>
+
+            <input
+                type="text"
+                id="memberNumber"
+                placeholder="Ex. EIF-1001"
+            >
+
+            <div class="button-group">
+
+                <button id="registerButton">
+                    Anmäl
+                </button>
+
+                <button id="unregisterButton">
+                    Avregistrera
+                </button>
+
+            </div>
+
+            <p id="message"></p>
+
+        </section>
+
+
+        <section class="activity-section">
+
+            <h2>Aktivitetsinformation</h2>
+
+            <div id="activityInfo">
+                Välj en aktivitet för att se information.
+            </div>
+
+        </section>
+
+
+        <section class="participants-section">
+
+            <h2>Anmälda deltagare</h2>
+
+            <div id="participantList">
+                Ingen aktivitet vald.
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>EIF - Aktivitetsanmälan 2027</p>
+    </footer>
+
+
+</body>
