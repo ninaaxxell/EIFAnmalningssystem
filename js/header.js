@@ -32,7 +32,7 @@ if (headerElement !== null) {
 
       <nav class="main-nav" aria-label="Huvudmeny" data-roles="medlem tranare admin" hidden>
         <a href="index.html#min-sida" data-roles="medlem">Min sida</a>
-        <a href="index.html#aktiviteter" data-roles="tranare admin">Aktiviteter</a>
+        <a href="index.html#aktiviteter" data-roles="admin">Aktiviteter</a>
         <a href="index.html#mina-evenemang" data-roles="tranare">Mina evenemang</a>
         <a href="index.html#admin" data-roles="admin">Administration</a>
       </nav>
