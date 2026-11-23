@@ -1,71 +1,96 @@
 "use strict";
+// "use strict" gör att JavaScript varnar oss om vi gör vanliga misstag,
+// till exempel om vi skriver fel på ett variabelnamn.
 
 /* ------------------------------------------------------------------
-   roles.js: roller, inloggad användare och behörighetskontroller.
+   roles.js: roller och behörighet
 
-   Rollerna är: administratör, tränare och medlem.
-   Den inloggade användaren sparas i sessionStorage (tills fliken stängs)
-   av inloggningen i scripts.js.
+   Här finns:
+   - de tre rollerna: administratör, tränare och medlem
+   - funktioner som berättar vem som är inloggad
+   - funktioner som svarar på "är användaren admin / tränare / medlem?"
 
-   Exempel:
+   Exempel på hur andra filer kan använda dem:
      if (isAdmin()) { ...visa administrationsknappar... }
-     getUserRole();   // "admin", "tranare", "medlem" eller null
+     getUserRole();   // ger "admin", "tranare", "medlem" eller null
 ------------------------------------------------------------------- */
 
+// Rollernas namn i koden (skrivs alltid med små bokstäver)
 const ROLES = {
   ADMIN: "admin",
   COACH: "tranare",
   MEMBER: "medlem"
 };
 
+// Rollernas namn som visas för användaren på sidan
 const ROLE_LABELS = {
   admin: "Administratör",
   tranare: "Tränare",
   medlem: "Medlem"
 };
 
+// Namnet vi sparar den inloggade användaren under i webbläsaren
 const SESSION_KEY = "eifInloggad";
 
-/* ---------- Inloggad användare ---------- */
+/* ---------- Den inloggade användaren ---------- */
 
-// Returnerar den inloggade användaren, eller null om ingen är inloggad
+// Hämtar den inloggade användaren. Ger null om ingen är inloggad.
 function getCurrentUser() {
   try {
-    return JSON.parse(sessionStorage.getItem(SESSION_KEY));
-  } catch (e) {
+    // sessionStorage kan bara spara text, så användaren sparas som text.
+    // JSON.parse gör om texten till ett objekt igen.
+    const text = sessionStorage.getItem(SESSION_KEY);
+    if (text === null) {
+      return null;
+    }
+    return JSON.parse(text);
+  } catch (error) {
+    // Om något går fel räknar vi det som att ingen är inloggad
     return null;
   }
 }
 
+// Sparar den inloggade användaren (sparas tills fliken stängs)
 function setCurrentUser(user) {
   try {
+    // JSON.stringify gör om objektet till text
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
-  } catch (e) {
-    /* Om lagring inte fungerar måste man logga in igen vid omladdning */
+  } catch (error) {
+    // Går det inte att spara måste man logga in igen när sidan laddas om
   }
 }
 
+// Tar bort den inloggade användaren (används vid utloggning)
 function clearCurrentUser() {
   try {
     sessionStorage.removeItem(SESSION_KEY);
-  } catch (e) { /* ignoreras */ }
+  } catch (error) {
+    // Inget att göra här
+  }
 }
 
 /* ---------- Användarens roll ---------- */
 
-// Returnerar rollen ("admin", "tranare" eller "medlem"), eller null om ingen är inloggad
+// Ger rollen ("admin", "tranare" eller "medlem"), eller null om ingen är inloggad
 function getUserRole() {
   const user = getCurrentUser();
-  return user ? user.role : null;
+  if (user === null) {
+    return null;
+  }
+  return user.role;
 }
 
-// Returnerar rollens namn att visa på sidan, till exempel "Administratör"
+// Ger rollens namn att visa på sidan, till exempel "Administratör"
 function getRoleLabel(role) {
-  return ROLE_LABELS[role] || "";
+  if (ROLE_LABELS[role] === undefined) {
+    return "";
+  }
+  return ROLE_LABELS[role];
 }
 
-/* ---------- Behörighetskontroller ---------- */
+/* ---------- Behörighetskontroller (svarar true eller false) ---------- */
 
+// Har den inloggade användaren just den här rollen?
 function hasRole(role) {
   return getUserRole() === role;
 }
@@ -88,4 +113,17 @@ function isMember() {
 // Är någon inloggad alls?
 function isLoggedIn() {
   return getCurrentUser() !== null;
+}
+
+// Ger den inloggade tränarens id (till exempel "TR-02").
+// Ger null om användaren inte är tränare.
+function getCoachId() {
+  const user = getCurrentUser();
+  if (user === null || user.role !== ROLES.COACH) {
+    return null;
+  }
+  if (user.tranareId === undefined) {
+    return null;
+  }
+  return user.tranareId;
 }
