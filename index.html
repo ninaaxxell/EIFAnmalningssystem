@@ -86,9 +86,17 @@
       </section>
     </section>
 
-    <section id="aktiviteter" class="view" data-roles="tranare admin" hidden>
+    <section id="admin" class="view" data-roles="admin" hidden>
+      <h1>Administration</h1>
+      <article class="card card-wide">
+        <h2>Medlemmar och årsavgift</h2>
+        <div id="admin-members"></div>
+      </article>
+      <p class="muted">Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
+    </section>
+
+    <section id="aktiviteter" class="view" data-roles="admin" hidden>
       <h1>Aktiviteter</h1>
-      <p data-roles="tranare" hidden>Du ser bara dina egna evenemang.</p>
       <p>Här kommer aktivitetslistan.</p>
     </section>
 
@@ -102,15 +110,6 @@
         <div id="coach-body"></div>
         <!-- Här kan anmälda och betalstatus per träning visas när anmälningarna är klara -->
       </article>
-    </section>
-
-    <section id="admin" class="view" data-roles="admin" hidden>
-      <h1>Administration</h1>
-      <article class="card card-wide">
-        <h2>Medlemmar och årsavgift</h2>
-        <div id="admin-members"></div>
-      </article>
-      <p class="muted">Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
     </section>
 
   </main>
