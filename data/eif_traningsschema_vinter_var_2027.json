@@ -9185,6 +9185,48 @@
       "tranare_namn": "Daniel Åkerman",
       "max_deltagare": 24,
       "antal_anmälda": 17
+    },
+    {
+      "id": 701,
+      "namn": "EIF Cup – juniorturnering",
+      "kategori": "Evenemang",
+      "datum": "2027-03-13",
+      "veckodag": "Lördag",
+      "tid": "09:00",
+      "plats": "EIF-hallen, Västerby",
+      "tranare_id": "TR-02",
+      "tranare_namn": "Sofia Berglund",
+      "max_deltagare": 40,
+      "antal_anmälda": 3,
+      "avgift_eur": 25,
+      "deltagare": [
+        "EIF-1030",
+        "EIF-1031",
+        "EIF-1052"
+      ],
+      "betalda": [
+        "EIF-1030"
+      ]
+    },
+    {
+      "id": 702,
+      "namn": "Träningsläger i Hangö",
+      "kategori": "Evenemang",
+      "datum": "2027-04-17",
+      "veckodag": "Lördag",
+      "tid": "10:00",
+      "plats": "Hangö idrottspark",
+      "tranare_id": "TR-01",
+      "tranare_namn": "Mikael Lindqvist",
+      "max_deltagare": 30,
+      "antal_anmälda": 3,
+      "avgift_eur": 60,
+      "deltagare": [
+        "EIF-1002",
+        "EIF-1011",
+        "EIF-1021"
+      ],
+      "betalda": []
     }
   ]
 }

@@ -331,3 +331,36 @@ table.data th { color: var(--muted); font-weight: 600; white-space: nowrap; }
   }
   .user-info { order: 2; }
 }
+
+/* ---------- ADMIN: aktiviteter, betalningar och evenemang ----------
+   Lägg längst ner i css/style.css */
+.field select {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+#admin-activities h3 { margin: 1rem 0 0.25rem; }
+#admin-activities tr.paid td   { background: var(--paid-bg);  color: var(--paid); }
+#admin-activities tr.unpaid td { background: var(--error-bg); color: var(--error); }
+#admin-activities .btn-ghost { margin-left: 0.75rem; }
+
+/* Knappar för evenemang */
+.admin-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+.btn-danger { color: var(--error); border-color: var(--error); }
+
+/* Formuläret för att skapa och redigera evenemang */
+#admin-event-form {
+  margin: 0.75rem 0 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+#admin-event-form h3 { margin: 0 0 0.75rem; }
+#admin-event-form .btn-primary { width: auto; margin-right: 0.5rem; }
