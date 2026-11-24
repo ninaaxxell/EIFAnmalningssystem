@@ -247,6 +247,38 @@ main {
 .badge-paid { background: var(--paid-bg); color: var(--paid); }
 .badge-unpaid { background: var(--error-bg); color: var(--error); }
 
+/* ---------- AKTIVITETSKORT (medlemmens sida) ---------- */
+.activity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.activity-card {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.activity-card h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+.activity-card p { margin: 0.15rem 0; font-size: 0.9rem; }
+
+/* ---------- ADMIN: medlemslista (rad blir grön eller röd) ---------- */
+#admin-members { max-height: 420px; overflow-y: auto; }
+#admin-members p { margin: 0 0 0.25rem; padding: 0.4rem 0.7rem; border-radius: 6px; font-size: 0.9rem; }
+#admin-members .paid { background: var(--paid-bg); color: var(--paid); }
+#admin-members .unpaid { background: var(--error-bg); color: var(--error); }
+
+/* ---------- TABELLER ---------- */
+.table-wrap { overflow-x: auto; margin-bottom: 0.75rem; }
+table.data { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+table.data th, table.data td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+table.data th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+
 /* ---------- KONTAKTSIDA ---------- */
 .contact-card {
   display: inline-block;
@@ -300,8 +332,8 @@ main {
   .user-info { order: 2; }
 }
 
-/* ---------- ADMIN: aktiviteter och betalningar ---------- */
-
+/* ---------- ADMIN: aktiviteter, betalningar och evenemang ----------
+   Lägg längst ner i css/style.css */
 .field select {
   display: block;
   width: 100%;
@@ -318,3 +350,17 @@ main {
 #admin-activities tr.paid td   { background: var(--paid-bg);  color: var(--paid); }
 #admin-activities tr.unpaid td { background: var(--error-bg); color: var(--error); }
 #admin-activities .btn-ghost { margin-left: 0.75rem; }
+
+/* Knappar för evenemang */
+.admin-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+.btn-danger { color: var(--error); border-color: var(--error); }
+
+/* Formuläret för att skapa och redigera evenemang */
+#admin-event-form {
+  margin: 0.75rem 0 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+#admin-event-form h3 { margin: 0 0 0.75rem; }
+#admin-event-form .btn-primary { width: auto; margin-right: 0.5rem; }
