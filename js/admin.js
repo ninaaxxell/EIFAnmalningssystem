@@ -9,12 +9,14 @@
       - Träning: betald om medlemmens årsavgift är betald (automatiskt).
       - Evenemang: administratören markerar varje anmälan som betald
         med en knapp. Raden blir då grön.
-   2. Medlemmar och årsavgift: alla medlemmar, grön = betald, röd = obetald.
+   2. Evenemang: administratören kan skapa, redigera och ta bort evenemang.
+   3. Medlemmar och årsavgift: alla medlemmar, grön = betald, röd = obetald.
 
    Använder funktioner från de andra filerna:
    - roles.js:       isAdmin()
    - members.js:     getAllMembers(), hasPaidAnnualFee()
-   - activities.js:  getAllActivities()
+   - activities.js:  loadActivities(), getAllActivities(), getAllCoaches(),
+                     getCoachById()
    - member-view.js: formatDate()
 
    Anmälda och betalda sparas i aktiviteten, i två listor med
@@ -28,14 +30,31 @@
 // Alla andra aktiviteter är träningar.
 const EVENT_CATEGORY = "Evenemang";
 
-// Håller reda på om rullgardinsmenyn redan är ifylld
+// Veckodagarna, i den ordning som JavaScript räknar dem (söndag först)
+const WEEKDAYS = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"];
+
+// Håller reda på om rullgardinsmenyn behöver fyllas i (på nytt)
 let adminMenuIsFilled = false;
+
+// Aktiviteten som är vald just nu
+let currentActivity = null;
+
+// Vilket evenemang som redigeras. null betyder att ett nytt skapas.
+let editingEventId = null;
+
+// Vilken aktivitet som ska väljas när menyn fylls i på nytt
+let pendingSelectId = null;
 
 /* ---------- Hjälpfunktioner ---------- */
 
 // Är aktiviteten ett evenemang? (annars är den en träning)
 function isEvent(activity) {
   return activity.kategori === EVENT_CATEGORY;
+}
+
+// Veckodagens namn för ett datum som "2027-03-13"
+function weekdayOf(isoDate) {
+  return WEEKDAYS[new Date(isoDate + "T12:00:00").getDay()];
 }
 
 // Skapar rutan "Aktiviteter och anmälningar" i adminvyn om den inte
@@ -52,10 +71,48 @@ function ensureActivityCard() {
     "<h2>Aktiviteter och anmälningar</h2>" +
     '<label class="field">Välj aktivitet ' +
     '<select id="admin-activity-select"></select></label>' +
+
+    '<div class="admin-toolbar">' +
+    '<button type="button" id="admin-new-event" class="btn-ghost">Nytt evenemang</button>' +
+    '<button type="button" id="admin-edit-event" class="btn-ghost" hidden>Redigera evenemang</button>' +
+    '<button type="button" id="admin-delete-event" class="btn-ghost btn-danger" hidden>Ta bort evenemang</button>' +
+    "</div>" +
+
+    '<form id="admin-event-form" hidden novalidate>' +
+    '<h3 id="admin-event-form-title"></h3>' +
+    '<p id="admin-event-form-error" class="error" role="alert" hidden></p>' +
+    '<label class="field">Namn <input type="text" id="ev-namn" required></label>' +
+    '<label class="field">Datum <input type="date" id="ev-datum" required></label>' +
+    '<label class="field">Tid <input type="time" id="ev-tid" required></label>' +
+    '<label class="field">Plats <input type="text" id="ev-plats" required></label>' +
+    '<label class="field">Tränare <select id="ev-tranare"></select></label>' +
+    '<label class="field">Max antal deltagare <input type="number" id="ev-max" min="1" required></label>' +
+    '<label class="field">Avgift (€) <input type="number" id="ev-avgift" min="0" step="0.01" required></label>' +
+    '<button type="submit" class="btn-primary">Spara</button> ' +
+    '<button type="button" id="ev-cancel" class="btn-ghost">Avbryt</button>' +
+    "</form>" +
+
     '<div id="admin-activities"></div>';
 
   // Lägg rutan först i adminvyn, före listan med medlemmar
   adminView.insertBefore(card, adminView.querySelector("article"));
+
+  // Koppla knapparna (görs bara en gång, när rutan skapas)
+  document.getElementById("admin-activity-select").addEventListener("change", function () {
+    closeEventForm();
+    renderAdminActivity();
+  });
+  document.getElementById("admin-new-event").addEventListener("click", function () {
+    openEventForm(null);
+  });
+  document.getElementById("admin-edit-event").addEventListener("click", function () {
+    openEventForm(currentActivity);
+  });
+  document.getElementById("admin-delete-event").addEventListener("click", function () {
+    deleteEvent(currentActivity);
+  });
+  document.getElementById("admin-event-form").addEventListener("submit", saveEvent);
+  document.getElementById("ev-cancel").addEventListener("click", closeEventForm);
 }
 
 // Vilka medlemmar är anmälda till aktiviteten?
@@ -120,6 +177,198 @@ function activityLabel(activity) {
   return text;
 }
 
+/* ---------- Skapa, redigera och ta bort evenemang ---------- */
+
+// Visar formuläret. activity = null ger ett tomt formulär (nytt evenemang).
+async function openEventForm(activity) {
+  if (isAdmin() === false) {
+    return;
+  }
+
+  editingEventId = (activity === null) ? null : activity.id;
+
+  document.getElementById("admin-event-form-title").textContent =
+    (activity === null) ? "Nytt evenemang" : "Redigera evenemang";
+
+  // Fyll i listan med tränare
+  const coachSelect = document.getElementById("ev-tranare");
+  const coaches = await getAllCoaches();
+  coachSelect.replaceChildren();
+  for (let i = 0; i < coaches.length; i++) {
+    const option = document.createElement("option");
+    option.value = coaches[i].tranare_id;
+    option.textContent = coaches[i].namn + " (" + coaches[i].tranare_id + ")";
+    coachSelect.append(option);
+  }
+
+  // Fyll i fälten
+  if (activity === null) {
+    document.getElementById("ev-namn").value = "";
+    document.getElementById("ev-datum").value = "";
+    document.getElementById("ev-tid").value = "18:00";
+    document.getElementById("ev-plats").value = "EIF-hallen, Västerby";
+    document.getElementById("ev-max").value = "20";
+    document.getElementById("ev-avgift").value = "0";
+  } else {
+    document.getElementById("ev-namn").value = activity.namn;
+    document.getElementById("ev-datum").value = activity.datum;
+    document.getElementById("ev-tid").value = activity.tid;
+    document.getElementById("ev-plats").value = activity.plats;
+    document.getElementById("ev-max").value = activity.max_deltagare;
+    document.getElementById("ev-avgift").value =
+      (activity.avgift_eur === undefined) ? 0 : activity.avgift_eur;
+    coachSelect.value = activity.tranare_id;
+  }
+
+  document.getElementById("admin-event-form-error").hidden = true;
+  document.getElementById("admin-event-form").hidden = false;
+  document.getElementById("ev-namn").focus();
+}
+
+// Döljer formuläret
+function closeEventForm() {
+  const form = document.getElementById("admin-event-form");
+  if (form !== null) {
+    form.hidden = true;
+  }
+  editingEventId = null;
+}
+
+// Visar ett felmeddelande i formuläret
+function showEventFormError(text) {
+  const box = document.getElementById("admin-event-form-error");
+  box.textContent = text;
+  box.hidden = false;
+}
+
+// Sparar formuläret: skapar ett nytt evenemang eller ändrar ett befintligt
+async function saveEvent(event) {
+  event.preventDefault();
+
+  // Bara administratören får skapa eller ändra evenemang
+  if (isAdmin() === false) {
+    return;
+  }
+
+  const namn = document.getElementById("ev-namn").value.trim();
+  const datum = document.getElementById("ev-datum").value;
+  const tid = document.getElementById("ev-tid").value;
+  const plats = document.getElementById("ev-plats").value.trim();
+  const tranareId = document.getElementById("ev-tranare").value;
+  const max = Number(document.getElementById("ev-max").value);
+  const avgift = Number(document.getElementById("ev-avgift").value);
+
+  // Kontrollera det som skrivits in
+  if (namn === "" || datum === "" || tid === "" || plats === "") {
+    showEventFormError("Fyll i namn, datum, tid och plats.");
+    return;
+  }
+  if (Number.isInteger(max) === false || max < 1) {
+    showEventFormError("Max antal deltagare måste vara ett heltal på minst 1.");
+    return;
+  }
+  if (isNaN(avgift) || avgift < 0) {
+    showEventFormError("Avgiften kan inte vara negativ.");
+    return;
+  }
+
+  const coach = await getCoachById(tranareId);
+  const coachName = (coach === null) ? "" : coach.namn;
+
+  try {
+    const list = await loadActivities(); // själva listan med aktiviteter
+
+    if (editingEventId === null) {
+      // ---- Skapa nytt evenemang ----
+      let highest = 0;
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].id > highest) {
+          highest = list[i].id;
+        }
+      }
+      const created = {
+        id: highest + 1,
+        namn: namn,
+        kategori: EVENT_CATEGORY,
+        datum: datum,
+        veckodag: weekdayOf(datum),
+        tid: tid,
+        plats: plats,
+        tranare_id: tranareId,
+        tranare_namn: coachName,
+        max_deltagare: max,
+        antal_anmälda: 0,
+        avgift_eur: avgift,
+        deltagare: [],
+        betalda: []
+      };
+      list.push(created);
+      pendingSelectId = created.id;
+
+    } else {
+      // ---- Redigera befintligt evenemang ----
+      let target = null;
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].id === editingEventId) {
+          target = list[i];
+        }
+      }
+      if (target === null) {
+        showEventFormError("Evenemanget hittades inte.");
+        return;
+      }
+      // Max får inte vara lägre än antalet som redan är anmälda
+      const registered = Array.isArray(target.deltagare) ? target.deltagare.length : 0;
+      if (max < registered) {
+        showEventFormError("Max kan inte vara lägre än antalet anmälda (" + registered + ").");
+        return;
+      }
+
+      target.namn = namn;
+      target.datum = datum;
+      target.veckodag = weekdayOf(datum);
+      target.tid = tid;
+      target.plats = plats;
+      target.tranare_id = tranareId;
+      target.tranare_namn = coachName;
+      target.max_deltagare = max;
+      target.avgift_eur = avgift;
+      pendingSelectId = target.id;
+    }
+
+    closeEventForm();
+    adminMenuIsFilled = false; // fyll i menyn på nytt
+    await renderAdminActivity();
+
+  } catch (error) {
+    showEventFormError("Kunde inte spara: " + error.message);
+  }
+}
+
+// Tar bort ett evenemang (efter att administratören har bekräftat)
+async function deleteEvent(activity) {
+  if (isAdmin() === false || activity === null || isEvent(activity) === false) {
+    return;
+  }
+
+  const sure = confirm(
+    'Ta bort evenemanget "' + activity.namn + '"? Anmälningarna försvinner också.'
+  );
+  if (sure === false) {
+    return;
+  }
+
+  const list = await loadActivities();
+  const index = list.indexOf(activity);
+  if (index !== -1) {
+    list.splice(index, 1);
+  }
+
+  closeEventForm();
+  adminMenuIsFilled = false; // fyll i menyn på nytt
+  await renderAdminActivity();
+}
+
 /* ---------- 1. Aktiviteter och anmälningar ---------- */
 
 async function renderAdminActivity() {
@@ -137,15 +386,19 @@ async function renderAdminActivity() {
       return (a.datum + a.tid).localeCompare(b.datum + b.tid);
     });
 
-    // Fyll rullgardinsmenyn första gången
+    // Fyll rullgardinsmenyn (första gången, och efter att evenemang ändrats)
     if (adminMenuIsFilled === false) {
+      select.replaceChildren();
       for (let i = 0; i < all.length; i++) {
         const option = document.createElement("option");
         option.value = all[i].id;
         option.textContent = activityLabel(all[i]);
         select.append(option);
       }
-      select.addEventListener("change", renderAdminActivity);
+      if (pendingSelectId !== null) {
+        select.value = String(pendingSelectId);
+        pendingSelectId = null;
+      }
       adminMenuIsFilled = true;
     }
 
@@ -156,6 +409,11 @@ async function renderAdminActivity() {
         activity = all[i];
       }
     }
+    currentActivity = activity;
+
+    // Knapparna för att ändra och ta bort visas bara för evenemang
+    document.getElementById("admin-edit-event").hidden = !isEvent(activity);
+    document.getElementById("admin-delete-event").hidden = !isEvent(activity);
 
     const participants = await getActivityParticipants(activity);
 
@@ -179,7 +437,10 @@ async function renderAdminActivity() {
     info.textContent =
       activity.veckodag + " " + formatDate(activity.datum) + " kl. " + activity.tid +
       ", " + activity.plats + ". Anmälda: " + participants.length +
-      " av " + activity.max_deltagare + ". Betalda: " + paidCount + ".";
+      " av " + activity.max_deltagare + ". Betalda: " + paidCount + "." +
+      (isEvent(activity) && activity.avgift_eur !== undefined
+        ? " Avgift: " + activity.avgift_eur + " €."
+        : "");
     const note = document.createElement("p");
     note.className = "muted";
     note.textContent = isEvent(activity)
@@ -243,7 +504,7 @@ async function renderAdminActivity() {
   }
 }
 
-/* ---------- 2. Medlemmar och årsavgift ---------- */
+/* ---------- 3. Medlemmar och årsavgift ---------- */
 
 async function renderAdminMembers() {
   const memberList = document.getElementById("admin-members");
