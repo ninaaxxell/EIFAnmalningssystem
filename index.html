@@ -7,8 +7,11 @@
   <script defer src="js/header.js"></script>
   <script defer src="js/footer.js"></script>
   <script defer src="js/members.js"></script>
+  <script defer src="js/activities.js"></script>
   <script defer src="js/roles.js"></script>
   <script defer src="js/member-view.js"></script>
+  <script defer src="js/coach-view.js"></script>
+  <script defer src="js/admin.js"></script>
   <script defer src="js/scripts.js"></script>
   <title>EIF Fotboll – Medlemmar och aktiviteter</title>
 </head>
@@ -44,7 +47,7 @@
         <strong>Testkonton för prototypen</strong>
         <ul>
           <li>Medlem: <code>medlem</code> / <code>medlem123</code></li>
-          <li>Tränare: <code>tranare</code> / <code>tranare123</code></li>
+          <li>Tränare: <code>tranare</code> eller <code>tranare1</code> till <code>tranare16</code> / <code>tranare123</code> (varje tränare har ett eget tränar-id)</li>
           <li>Administratör: <code>admin</code> / <code>admin123</code></li>
         </ul>
       </div>
@@ -83,20 +86,30 @@
       </section>
     </section>
 
-    <section id="aktiviteter" class="view" data-roles="tranare admin" hidden>
+    <section id="admin" class="view" data-roles="admin" hidden>
+      <h1>Administration</h1>
+      <article class="card card-wide">
+        <h2>Medlemmar och årsavgift</h2>
+        <div id="admin-members"></div>
+      </article>
+      <p class="muted">Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
+    </section>
+
+    <section id="aktiviteter" class="view" data-roles="admin" hidden>
       <h1>Aktiviteter</h1>
-      <p data-roles="tranare" hidden>Du ser bara dina egna evenemang.</p>
       <p>Här kommer aktivitetslistan.</p>
     </section>
 
     <section id="mina-evenemang" class="view" data-roles="tranare" hidden>
       <h1>Mina evenemang</h1>
-      <p>Här kommer anmälda och betalstatus för dina evenemang.</p>
-    </section>
+      <p id="coach-message" class="error" role="alert" hidden></p>
+      <p id="coach-info" class="muted"></p>
 
-    <section id="admin" class="view" data-roles="admin" hidden>
-      <h1>Administration</h1>
-      <p>Här kommer hanteringen av aktiviteter, anmälda och betalningar.</p>
+      <article class="card card-wide">
+        <h2>Kommande träningar</h2>
+        <div id="coach-body"></div>
+        <!-- Här kan anmälda och betalstatus per träning visas när anmälningarna är klara -->
+      </article>
     </section>
 
   </main>

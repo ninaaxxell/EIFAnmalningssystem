@@ -247,6 +247,38 @@ main {
 .badge-paid { background: var(--paid-bg); color: var(--paid); }
 .badge-unpaid { background: var(--error-bg); color: var(--error); }
 
+/* ---------- AKTIVITETSKORT (medlemmens sida) ---------- */
+.activity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.activity-card {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.activity-card h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+.activity-card p { margin: 0.15rem 0; font-size: 0.9rem; }
+
+/* ---------- ADMIN: medlemslista (rad blir grön eller röd) ---------- */
+#admin-members { max-height: 420px; overflow-y: auto; }
+#admin-members p { margin: 0 0 0.25rem; padding: 0.4rem 0.7rem; border-radius: 6px; font-size: 0.9rem; }
+#admin-members .paid { background: var(--paid-bg); color: var(--paid); }
+#admin-members .unpaid { background: var(--error-bg); color: var(--error); }
+
+/* ---------- TABELLER ---------- */
+.table-wrap { overflow-x: auto; margin-bottom: 0.75rem; }
+table.data { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+table.data th, table.data td {
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+table.data th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+
 /* ---------- KONTAKTSIDA ---------- */
 .contact-card {
   display: inline-block;

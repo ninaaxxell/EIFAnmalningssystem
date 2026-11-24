@@ -1,14 +1,19 @@
 "use strict";
 
 /* ------------------------------------------------------------------
-   Footer: ligger på ett ställe och används av alla sidor.
-   Ändra här så ändras den överallt.
-------------------------------------------------------------------- */
-(function () {
-  const target = document.getElementById("site-footer");
-  if (!target) return;
+   footer.js: sidans nedre del (adress, slogan och copyright)
 
-  target.innerHTML = `
+   Footern ligger på ett ställe och används av alla sidor. Ändrar du
+   här ändras den överallt. Varje sida har en tom <footer id="site-footer">
+   som den här filen fyller med innehåll.
+------------------------------------------------------------------- */
+
+// Hitta den tomma footern på sidan
+const footerElement = document.getElementById("site-footer");
+
+if (footerElement !== null) {
+  // Texten mellan `...` är HTML som sätts in i footern
+  footerElement.innerHTML = `
     <div class="footer-inner">
       <address>
         <strong>Ekenäs Idrottsförening rf</strong><br>
@@ -20,4 +25,4 @@
       <p class="footer-copy">&copy; 2026 Ekenäs Idrottsförening rf. Prototyp, inte för skarp användning.</p>
     </div>
   `;
-})();
+}
