@@ -332,7 +332,7 @@ table.data th { color: var(--muted); font-weight: 600; white-space: nowrap; }
   .user-info { order: 2; }
 }
 
-/* ---------- ADMIN: aktiviteter, betalningar och evenemang ----------
+/* ---------- ADMIN: aktiviteter, betalningar, evenemang, användare och lag ----------
    Lägg längst ner i css/style.css */
 .field select {
   display: block;
@@ -354,16 +354,19 @@ table.data th { color: var(--muted); font-weight: 600; white-space: nowrap; }
 /* Knappar för evenemang */
 .admin-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
 .btn-danger { color: var(--error); border-color: var(--error); }
+table.data .btn-ghost { margin-right: 0.4rem; }
 
-/* Formuläret för att skapa och redigera evenemang */
-#admin-event-form {
+/* Formulär för att skapa och redigera (evenemang, medlemmar och lag) */
+.admin-form {
   margin: 0.75rem 0 1rem;
   padding: 1rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: 8px;
 }
-#admin-event-form h3 { margin: 0 0 0.75rem; }
-#admin-event-form .btn-primary { width: auto; margin-right: 0.5rem; }
+.admin-form h3 { margin: 0 0 0.75rem; }
+.admin-form .btn-primary { width: auto; margin-right: 0.5rem; }
+.field.field-check { display: flex; align-items: center; gap: 0.5rem; }
+.field.field-check input { display: inline-block; width: auto; margin: 0; }
 
 /* ---------- ANMÄLAN: medlemmens aktivitetskort ---------- */
 .success {
