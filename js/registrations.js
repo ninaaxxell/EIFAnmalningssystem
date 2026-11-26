@@ -3,6 +3,21 @@
 let data = null;
 let medlemsData = null;
 
+// ÄNDRAT: Det senaste meddelandet som showMessage() visade (text och typ).
+// activities.js läser det efter en anmälan eller avregistrering.
+let lastMessage = null;
+
+// ÄNDRAT: Koppla ihop den här filen med systemets gemensamma data.
+// Medlemssidan (activities.js) skickar in listorna som activities.js och
+// members.js har läst in. Då ser admin, tränare och medlemmar samma
+// anmälningar, och registerMember() m.fl. fungerar på den gemensamma datan.
+function connectSharedData(schedule, members) {
+
+    data = schedule;
+    medlemsData = { medlemmar: members };
+
+}
+
 
 // Ladda information från båda JSON-filerna
 async function loadData() {
@@ -262,6 +277,11 @@ function getParticipants(activityId) {
 // Visa information om en aktivitet
 function displayActivityInfo(activityId) {
 
+    // ÄNDRAT: Saknas rutorna på sidan (t.ex. på startsidan) görs ingenting
+    if (document.getElementById("activityInfo") === null) {
+        return;
+    }
+
     // Hitta aktiviteten
     const activity = data.aktiviteter.find(function(activity) {
         return activity.id === activityId;
@@ -330,6 +350,16 @@ function displayActivityInfo(activityId) {
 // Visa meddelanden på sidan
 function showMessage(message, type) {
 
+    // ÄNDRAT: Spara meddelandet så att andra filer kan läsa det
+    lastMessage = { text: message, type: type };
+
+    const messageElement = document.getElementById("message");
+
+    // ÄNDRAT: Finns ingen ruta för meddelanden på sidan är vi klara
+    if (messageElement === null) {
+        return;
+    }
+
     const messageElement = document.getElementById("message");
 
     messageElement.textContent = message;
@@ -350,6 +380,12 @@ function getSelectedActivityId() {
     return Number(value);
 
 }
+
+
+// ÄNDRAT: Resten av filen (knapparna och inläsningen) körs bara på en sida som
+// har anmälningsformuläret. På startsidan finns det inte, och då gav raderna
+// nedan ett fel eftersom knapparna saknas.
+if (document.getElementById("registerButton") !== null) {
 
 
 // När användaren klickar på anmälningsknappen
@@ -416,4 +452,8 @@ function testData() {
 */
 
 // Starta programmet och ladda JSON-filen
+loadData();
+
+
+}  // ÄNDRAT: slut på if-satsen ovan
 loadData();			

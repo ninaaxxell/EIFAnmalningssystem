@@ -367,3 +367,26 @@ table.data .btn-ghost { margin-right: 0.4rem; }
 .admin-form .btn-primary { width: auto; margin-right: 0.5rem; }
 .field.field-check { display: flex; align-items: center; gap: 0.5rem; }
 .field.field-check input { display: inline-block; width: auto; margin: 0; }
+
+/* ---------- ANMÄLAN: medlemmens aktivitetskort ---------- */
+.success {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  background: var(--paid-bg);
+  color: var(--paid);
+  font-size: 0.9rem;
+}
+.activity-card.registered { border-color: var(--paid); }
+.activity-card .activity-status { margin-top: 0.4rem; font-weight: 600; color: var(--paid); }
+.activity-card .btn-primary,
+.activity-card .btn-ghost {
+  width: auto;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+/* ---------- MINA ANMÄLNINGAR (medlemmens lista) ---------- */
+#member-registrations .table-wrap { max-height: 480px; overflow-y: auto; }
+#member-registrations td .btn-ghost { padding: 0.3rem 0.7rem; font-size: 0.85rem; }
