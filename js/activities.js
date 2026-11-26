@@ -10,8 +10,10 @@
    1. Läser in schemat från JSON-filen
    2. Hämtar aktiviteter (alla, kommande, via id, via tränare)
    3. Hämtar tränare (via id)
-   4. Visar medlemmens aktiviteter på "Min sida", med knappar för
-      att anmäla sig och avregistrera sig, och en lista "Mina anmälningar"
+   4. Visar medlemmens aktiviteter på "Min sida", med knappar för att
+      anmäla sig och avregistrera sig, och listan "Mina anmälningar".
+      Själva anmälan och avregistreringen görs av registerMember() och
+      unregisterMember() i registrations.js
 
    JSON-filen ska ligga i mappen data/ bredvid index.html.
    En aktivitet i filen ser ut så här:
@@ -229,7 +231,21 @@ async function ensureParticipantList(activity) {
   }
 }
 
+// Kopplar ihop registrations.js med systemets gemensamma data, så att
+// anmälningar syns överallt (admin, tränare och medlem använder samma listor).
+async function connectRegistrations() {
+  // Om registrations.js inte är inskriven i index.html finns funktionerna inte
+  if (typeof connectSharedData !== "function" || typeof registerMember !== "function") {
+    throw new Error("registrations.js saknas på sidan.");
+  }
+
+  const schedule = await loadSchedule(); // hela schemat (samma som alla andra filer använder)
+  const members = await loadMembers();   // listan med medlemmar (från members.js)
+  connectSharedData(schedule, members);  // funktion i registrations.js
+}
+
 // Anmäler en medlem till en aktivitet.
+// Själva anmälan görs av registerMember() i registrations.js.
 // Ger { ok: true/false, message: "text att visa" }
 async function registerMemberToActivity(activityId, memberNumber) {
   const activity = await getActivityById(activityId);
@@ -249,24 +265,18 @@ async function registerMemberToActivity(activityId, memberNumber) {
     return { ok: false, message: "Aktiviteten har redan varit." };
   }
 
-  const numbers = await getRegisteredNumbers(activity);
-
-  if (numbers.includes(member.medlemsnummer)) {
-    return { ok: false, message: "Du är redan anmäld." };
-  }
-  if (numbers.length >= activity.max_deltagare) {
-    return { ok: false, message: "Aktiviteten är full." };
-  }
-
-  // Lägg till medlemsnumret i listan över anmälda
+  // Låt registrations.js göra anmälan (den kollar också om medlemmen
+  // redan är anmäld och om aktiviteten är full)
+  await connectRegistrations();
   await ensureParticipantList(activity);
-  activity.deltagare.push(member.medlemsnummer);
-  activity.antal_anmälda = activity.deltagare.length;
+  registerMember(activity.id, member.medlemsnummer);
 
-  return { ok: true, message: "Du är nu anmäld till " + activity.namn + "." };
+  // registrations.js sparar sitt meddelande i lastMessage
+  return { ok: lastMessage.type === "success", message: lastMessage.text };
 }
 
 // Avregistrerar en medlem från en aktivitet.
+// Själva avregistreringen görs av unregisterMember() i registrations.js.
 // Ger { ok: true/false, message: "text att visa" }
 async function unregisterMemberFromActivity(activityId, memberNumber) {
   const activity = await getActivityById(activityId);
@@ -281,21 +291,22 @@ async function unregisterMemberFromActivity(activityId, memberNumber) {
     return { ok: false, message: "Du är inte anmäld till den här aktiviteten." };
   }
 
-  // Ta bort medlemsnumret ur listan över anmälda
+  // Låt registrations.js göra avregistreringen
+  await connectRegistrations();
   await ensureParticipantList(activity);
-  const index = activity.deltagare.indexOf(member.medlemsnummer);
-  activity.deltagare.splice(index, 1);
-  activity.antal_anmälda = activity.deltagare.length;
+  unregisterMember(activity.id, member.medlemsnummer);
+
+  const ok = (lastMessage.type === "success");
 
   // Hade administratören markerat anmälan som betald tar vi bort markeringen
-  if (Array.isArray(activity.betalda)) {
+  if (ok && Array.isArray(activity.betalda)) {
     const paidIndex = activity.betalda.indexOf(member.medlemsnummer);
     if (paidIndex !== -1) {
       activity.betalda.splice(paidIndex, 1);
     }
   }
 
-  return { ok: true, message: "Du är nu avanmäld från " + activity.namn + "." };
+  return { ok: ok, message: lastMessage.text };
 }
 
 /* ---------- Visa aktiviteter på medlemmens sida ---------- */
@@ -407,9 +418,10 @@ async function renderMemberActivities() {
       const registered = numbers.includes(member.medlemsnummer);
       const free = activity.max_deltagare - numbers.length;
 
-      let spots = String(free);
+      // Visa både lediga platser och hur många som totalt får plats, t.ex. "37 av 40"
+      let spots = free + " av " + activity.max_deltagare;
       if (free <= 0) {
-        spots = "0 (full)";
+        spots = "0 av " + activity.max_deltagare + " (full)";
       }
 
       let html =
