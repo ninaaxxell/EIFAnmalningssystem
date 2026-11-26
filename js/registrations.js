@@ -360,6 +360,8 @@ function showMessage(message, type) {
         return;
     }
 
+    const messageElement = document.getElementById("message");
+
     messageElement.textContent = message;
     messageElement.className = type;
 
@@ -454,3 +456,4 @@ loadData();
 
 
 }  // ÄNDRAT: slut på if-satsen ovan
+loadData();			
