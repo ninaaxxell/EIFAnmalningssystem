@@ -367,3 +367,43 @@ table.data .btn-ghost { margin-right: 0.4rem; }
 .admin-form .btn-primary { width: auto; margin-right: 0.5rem; }
 .field.field-check { display: flex; align-items: center; gap: 0.5rem; }
 .field.field-check input { display: inline-block; width: auto; margin: 0; }
+
+/* ---------- ADMIN OCH TRÄNARE: evenemangsdialog, tränarens egna evenemang, tränare ----------
+   Lägg längst ner i css/style.css, under det som redan finns */
+
+/* Dialogrutan med formuläret för evenemang (används av admin och tränare) */
+dialog.admin-dialog {
+  width: min(520px, calc(100% - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  overflow-y: auto;
+}
+dialog.admin-dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+dialog.admin-dialog .admin-form { margin: 0; border: none; }
+.admin-form select:disabled { opacity: 0.7; }
+
+/* Tränarens egna evenemang: deltagare med betalstatus */
+#coach-event-participants { margin-top: 1rem; }
+#coach-event-participants h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+#coach-event-participants p {
+  margin: 0 0 0.25rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+#coach-event-participants .paid { background: var(--paid-bg); color: var(--paid); }
+#coach-event-participants .unpaid { background: var(--error-bg); color: var(--error); }
+
+/* Meddelande när en tränare har skapats */
+.admin-ok {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  background: var(--paid-bg);
+  color: var(--paid);
+  font-size: 0.9rem;
+}
